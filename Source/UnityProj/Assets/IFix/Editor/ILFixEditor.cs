@@ -335,6 +335,12 @@ namespace IFix.Editor
 
         private static string GetScriptAssembliesFolder()
         {
+            //Newer Unity (e.g. Unity 6) compiles player scripts to Library/Bee/PlayerScriptAssemblies during a build, and UnityLinker/IL2CPP read them from there.
+            //The folder remains after the build, so only use it while building to keep the menu commands off stale dlls from the last build
+            if (BuildPipeline.isBuildingPlayer && Directory.Exists("./Library/Bee/PlayerScriptAssemblies/"))
+            {
+                return "Bee/PlayerScriptAssemblies";
+            }
             var assembliesFolder = "PlayerScriptAssemblies";
             if (!Directory.Exists(string.Format("./Library/{0}/", assembliesFolder)))
             {
