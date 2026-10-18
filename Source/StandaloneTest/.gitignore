@@ -1,0 +1,26 @@
+out/
+
+# Unity generated
+UnityProj/[Ll]ibrary/
+UnityProj/[Tt]emp/
+UnityProj/[Ll]ogs/
+UnityProj/[Uu]serSettings/
+UnityProj/[Bb]uild/
+UnityProj/obj/
+UnityProj/*.csproj
+UnityProj/*.sln
+UnityProj/Packages/packages-lock.json
+
+# installed by run.sh
+UnityProj/IFixToolKit/
+UnityProj/Assets/IFix/
+UnityProj/Assets/IFix.meta
+UnityProj/Assets/Plugins/
+UnityProj/Assets/Plugins.meta
+UnityProj/Assets/Resources/
+UnityProj/Assets/Resources.meta
+UnityProj/Assets/csc.rsp*
+UnityProj/Assets/IFixBench/Bench.unity*
+UnityProj/*.patch.bytes
+UnityProj/*.ill.bytes
+UnityProj/process_cfg

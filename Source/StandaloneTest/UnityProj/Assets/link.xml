@@ -1,0 +1,8 @@
+<!-- APIs used only by patches (not by the player code) are stripped by UnityLinker, so preserve them here -->
+<linker>
+  <assembly fullname="UnityEngine.CoreModule">
+    <type fullname="UnityEngine.Quaternion" preserve="all"/>
+    <type fullname="UnityEngine.Mathf" preserve="all"/>
+    <type fullname="UnityEngine.Vector3" preserve="all"/>
+  </assembly>
+</linker>
