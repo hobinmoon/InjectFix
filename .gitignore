@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Serena MCP local data
+.serena/
+
+# Visual Studio build intermediates
+obj/
