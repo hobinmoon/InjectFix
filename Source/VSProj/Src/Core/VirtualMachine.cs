@@ -898,7 +898,8 @@ namespace IFix.Core
                             if (externInvokeFunc == null)
                             {
                                 externInvokers[methodId] = externInvokeFunc
-                                    = (new ReflectionMethodInvoker(externMethods[methodId])).Invoke;
+                                    = GenericMethodInvoker.Create(externMethods[methodId])
+                                    ?? (new ReflectionMethodInvoker(externMethods[methodId])).Invoke;
                             }
                             //Info("call extern: " + externMethods[methodId]);
                             var top = evaluationStackPointer - paramCount;

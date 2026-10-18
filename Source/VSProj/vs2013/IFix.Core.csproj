@@ -57,6 +57,9 @@
     <Compile Include="..\Src\Core\GenericDelegate.cs">
       <Link>Src\Core\GenericDelegate.cs</Link>
     </Compile>
+    <Compile Include="..\Src\Core\GenericMethodInvoker.cs">
+      <Link>Src\Core\GenericMethodInvoker.cs</Link>
+    </Compile>
     <Compile Include="..\Src\Core\Il2CppSetOptionAttribute.cs">
       <Link>Src\Core\Il2CppSetOptionAttribute.cs</Link>
     </Compile>

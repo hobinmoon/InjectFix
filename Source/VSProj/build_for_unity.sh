@@ -14,6 +14,7 @@ $GMCS -define:UNITY_IPHONE -unsafe -target:library -out:$DLL_OUTPUT Src/Builder/
 Src/Core/AnonymousStorey.cs \
 Src/Core/DataDefine.cs \
 Src/Core/GenericDelegate.cs \
+Src/Core/GenericMethodInvoker.cs \
 Src/Core/Il2CppSetOptionAttribute.cs \
 Src/Core/ObjectClone.cs \
 Src/Core/ReflectionMethodInvoker.cs \
