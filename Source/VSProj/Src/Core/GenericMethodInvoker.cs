@@ -249,8 +249,68 @@ namespace IFix.Core
             return true;
         }
 
+        //Only used by probe(), so no generic instantiation over it exists ahead of time
+        struct ProbeValue
+        {
+            public int Value;
+        }
+
+        static ProbeValue probeAdd(ProbeValue a, int b)
+        {
+            a.Value += b;
+            return a;
+        }
+
+        //0: not probed yet, 1: supported, -1: not supported
+        static int supportState = 0;
+
+        //Without IL2CPP full generic sharing (before Unity 2022), invoker types made with MakeGenericType over value
+        //types have no AOT code and fail when called, not when created. So build and call one over a value type
+        //that no code instantiates statically; if that fails, never use this path.
+        static bool probe()
+        {
+            try
+            {
+                var invoker = create(new Func<ProbeValue, int, ProbeValue>(probeAdd).Method);
+                if (invoker == null)
+                {
+                    return false;
+                }
+                Value* stack = stackalloc Value[2];
+                var managedStack = new object[2];
+                stack[0].Type = ValueType.ValueType;
+                stack[0].Value1 = 0;
+                managedStack[0] = new ProbeValue { Value = 40 };
+                stack[1].Type = ValueType.Integer;
+                stack[1].Value1 = 2;
+                var call = new Call()
+                {
+                    argumentBase = stack,
+                    currentTop = stack,
+                    evaluationStackBase = stack,
+                    managedStack = managedStack
+                };
+                invoker(null, ref call, false);
+                return call.currentTop == stack + 1 && stack[0].Type == ValueType.ValueType
+                    && managedStack[0] is ProbeValue && ((ProbeValue)managedStack[0]).Value == 42;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         //Returns null if unsupported
         internal static ExternInvoker Create(MethodBase method)
+        {
+            if (supportState == 0)
+            {
+                supportState = probe() ? 1 : -1;
+            }
+            return supportState > 0 ? create(method) : null;
+        }
+
+        static ExternInvoker create(MethodBase method)
         {
             var methodInfo = method as MethodInfo;
             if (methodInfo == null || methodInfo.ContainsGenericParameters)

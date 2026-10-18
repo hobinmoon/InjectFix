@@ -80,6 +80,15 @@ public class BenchRunner : MonoBehaviour
         var go = new GameObject("perf");
         var t = go.transform;
 
+        //1: the generic invoker passed its runtime probe and is used, -1: it failed and reflection is used
+        var invokerType = typeof(VirtualMachine).Assembly.GetType("IFix.Core.GenericMethodInvoker");
+        if (invokerType != null)
+        {
+            report.AppendLine();
+            report.AppendLine("generic invoker probe: " + invokerType.GetField("supportState",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).GetValue(null));
+        }
+
         perfHeader("extern call shapes");
         perf("no extern", Nat.Cases.PerfNoExtern, Vm.Cases.PerfNoExtern);
         perf("static Add", Nat.Cases.PerfStaticAdd, Vm.Cases.PerfStaticAdd);
