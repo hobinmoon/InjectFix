@@ -130,8 +130,24 @@ namespace IFix
 
         static string getAssemblyFullName(TypeReference typeReference)
         {
-            return (typeReference.Scope is AssemblyNameReference) ? (typeReference.Scope as AssemblyNameReference)
-                .FullName : typeReference.Module.Assembly.FullName;
+            var scope = typeReference.Scope as AssemblyNameReference;
+            if (scope == null)
+            {
+                return typeReference.Module.Assembly.FullName;
+            }
+            //Facades like netstandard point to the real assembly through TypeForward, and the runtime (IL2CPP) can't load the type by the facade name,
+            //so if the type is actually defined in another assembly, use that assembly's name
+            TypeDefinition typeDefinition = null;
+            try
+            {
+                typeDefinition = typeReference.Resolve();
+            }
+            catch { }
+            if (typeDefinition != null && typeDefinition.Module.Assembly.Name.Name != scope.Name)
+            {
+                return typeDefinition.Module.Assembly.FullName;
+            }
+            return scope.FullName;
         }
 
         static string getAssemblyName(TypeReference typeReference)
