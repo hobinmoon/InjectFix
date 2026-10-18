@@ -1596,7 +1596,9 @@ namespace IFix
 
                                 MethodDefinition or = null;
                                 var lastInstruction = code.Last();
-                                if (lastInstruction.Code == Core.Code.Constrained)
+                                //The second instruction of Ldc_I8/Ldc_R8 is raw constant data that may happen to equal Constrained, so check the previous IL instruction
+                                if (msIl.Previous != null && msIl.Previous.OpCode.Code == Code.Constrained
+                                    && lastInstruction.Code == Core.Code.Constrained)
                                 {
                                     var constrainedType = externTypes[lastInstruction.Operand];
                                     var hasOverrideMethod = false;
