@@ -13,7 +13,7 @@ using Vm = IFixBench.Interp;
 
 //1. VM bench: compare results and timings of IFixBench.Interp (no_cfg injected, fully run by the VM) and IFixBench.Native
 //2. workflow: Assembly-CSharp is injected per the [IFix] config; compare behavior before/after loading the -wfPatch patch
-//Writes the results to the -benchOut file and quits
+//Writes the results to the -benchOut file (default: persistentDataPath/ifix_bench.txt) and quits
 public class BenchRunner : MonoBehaviour
 {
     const int N = 200000;
@@ -132,7 +132,8 @@ public class BenchRunner : MonoBehaviour
         double nativeAcc = measure(n => { float r = 0; for (int i = 0; i < n / 100; i++) r += WfHot.Accumulate(pts); return (long)r; });
         double nativeMix = measure(n => { long r = 0; for (int i = 0; i < n; i++) r += WfHot.Mix(i, 3); return r; });
 
-        var patchPath = getArg("-wfPatch");
+        //iOS can't pass command line arguments, so run.sh puts the patch into StreamingAssets
+        var patchPath = getArg("-wfPatch") ?? Path.Combine(Application.streamingAssetsPath, "Assembly-CSharp.patch.bytes");
         if (patchPath == null || !File.Exists(patchPath))
         {
             failures++;
